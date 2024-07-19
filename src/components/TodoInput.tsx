@@ -1,16 +1,16 @@
-import { FC, FormEvent, useRef, useState } from "react";
-interface TodoInputProps {
-  onAdd: (title: string) => void;
-}
-const TodoInput: FC<TodoInputProps> = ({ onAdd }) => {
+import { FormEvent, useRef, useState } from "react";
+import { useTodo } from "../contexts/TodoContext.tsx";
+
+const TodoInput = () => {
   const [title, setTitle] = useState("");
 
+  const { addTodo } = useTodo();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    onAdd(title);
+    addTodo(title);
     setTitle("");
     inputRef.current?.focus();
   };

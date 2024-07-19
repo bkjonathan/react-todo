@@ -1,31 +1,27 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Todo } from "../types/todo.interface.ts";
 import TodoItem from "./TodoItem.tsx";
+import { useTodo } from "../contexts/TodoContext.tsx";
 
-interface TodoListProps {
-  todos: Todo[];
-  onUpdate: (id: number, title: string) => void;
-  onDelete: (id: number) => void;
-}
-
-const TodoList: FC<TodoListProps> = ({ todos, onDelete, onUpdate }) => {
+const TodoList = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingTitle, setEditingTitle] = useState<string>("");
 
+  const { todos, updateTodo, deleteTodo } = useTodo();
   const handleEdit = (todo: Todo) => {
     setEditingId(todo.id);
     setEditingTitle(todo.title);
   };
 
   const saveEdit = (id: number) => {
-    onUpdate(id, editingTitle);
+    updateTodo(id, editingTitle);
     setEditingId(null);
     setEditingTitle("");
   };
 
   const handleTitleChange = (title: string) => {
     setEditingTitle(title);
-    if (editingId) onUpdate(editingId, title);
+    if (editingId) updateTodo(editingId, title);
   };
 
   return (
@@ -37,7 +33,7 @@ const TodoList: FC<TodoListProps> = ({ todos, onDelete, onUpdate }) => {
           isEditing={editingId === todo.id}
           onEdit={handleEdit}
           onSave={saveEdit}
-          onDelete={onDelete}
+          onDelete={deleteTodo}
           onTitleChange={handleTitleChange}
         />
       ))}
